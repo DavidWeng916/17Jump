@@ -1,10 +1,13 @@
-using DG.Tweening;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Live17Game
 {
     public class PlatformUnit : ObjectPoolUnitBase
     {
+        [SerializeField]
+        private GameObject _modelGo = null;
+
         public Vector3 LocalPosition => transform.localPosition;
         public Quaternion LocalRotation => transform.localRotation;
 
@@ -37,7 +40,7 @@ namespace Live17Game
 
         public void SetLocalPositionAndRotation(Vector3 localPosition, Quaternion localRotation)
         {
-            localPosition.y = 0f;
+            // localPosition.y = 0f;
             transform.SetLocalPositionAndRotation(localPosition, localRotation);
         }
 
@@ -57,6 +60,19 @@ namespace Live17Game
             .DOScaleY(SizeVec.y, 0.3f)
             .SetLink(gameObject)
             .SetEase(Ease.OutBounce);
+        }
+
+        public void PlaySpawnAnimation()
+        {
+            Vector3 originPoint = _modelGo.transform.localPosition;
+            Vector3 fromPoint = new Vector3(originPoint.x, 5f, originPoint.z);
+
+            _modelGo.transform
+                .DOLocalMoveY(0, 0.5f)
+                .From(fromPoint, true, true)
+                .SetLink(gameObject)
+                .SetEase(Ease.OutBounce)
+                ;
         }
     }
 }

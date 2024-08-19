@@ -20,12 +20,12 @@ namespace Live17Game
         {
             origin.y = 0f;
             target.y = 0f;
-            return target - origin;
+            return (target - origin).normalized;
         }
 
         public static Vector3 GetLandPoint(Vector3 origin, Vector3 target, float jumpLength)
         {
-            Vector3 direction = MathUtility.GetXZDirection(origin, target).normalized;
+            Vector3 direction = MathUtility.GetXZDirection(origin, target);
             return origin + direction * jumpLength;
         }
     }

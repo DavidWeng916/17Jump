@@ -93,7 +93,18 @@ namespace Live17Game
         private void Jump()
         {
             Vector3 localPosition = LocalPosition;
+            Vector3 targetLocalPosition = GetTargetLocalPosition(localPosition);
 
+            // Test
+            // targetLocalPosition = targetPlatformUnit.PlatformLocalPoint;
+
+            PlayJumpAnimation(localPosition, targetLocalPosition);
+
+            onJumpStart();
+        }
+
+        private Vector3 GetTargetLocalPosition(Vector3 localPosition)
+        {
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
             Vector3 nearestPoint = targetPlatformUnit.GetNearestPoint();
             Vector3 farestPoint = targetPlatformUnit.GetFarthestPoint();
@@ -101,19 +112,12 @@ namespace Live17Game
             float jumpLength = _pressTime * DataModel.JUMP_LENGTH;
             float distanceXZ = MathUtility.GetXZDistance(localPosition, nearestPoint);
 
-            Vector3 targetLocalPosition;
-
             if (jumpLength < distanceXZ)
             {
-                targetLocalPosition = MathUtility.GetLandPoint(localPosition, nearestPoint, jumpLength);
-            }
-            else
-            {
-                targetLocalPosition = MathUtility.GetLandPoint(nearestPoint, farestPoint, jumpLength - distanceXZ);
+                return MathUtility.GetLandPoint(localPosition, nearestPoint, jumpLength);
             }
 
-            PlayJumpAnimation(localPosition, targetLocalPosition);
-            onJumpStart();
+            return MathUtility.GetLandPoint(nearestPoint, farestPoint, jumpLength - distanceXZ);
         }
 
         private void PlayJumpAnimation(Vector3 startPoint, Vector3 endPoint)
