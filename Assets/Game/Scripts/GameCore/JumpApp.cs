@@ -17,10 +17,16 @@ namespace Live17Game
         [SerializeField]
         private GameController _gameController = null;
 
+        private DataModel _dataModel = null;
+        public DataModel DataModel => _dataModel;
+
         void Awake()
         {
             Instance = this;
             InitGameConfig();
+
+            _dataModel = new DataModel();
+            _dataModel.Init();
 
             _uiManager.Init();
             _uiManager.onResetGame = OnResetGame;

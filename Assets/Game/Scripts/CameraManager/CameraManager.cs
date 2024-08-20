@@ -46,7 +46,7 @@ namespace Live17Game
             Gizmos.color = Color.blue;
             Gizmos.DrawRay(ray.origin, ray.direction * DISTANCE);
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(ray.GetPoint(DISTANCE), 0.5f);
+            Gizmos.DrawSphere(ray.GetPoint(DISTANCE), 0.1f);
         }
     }
 }

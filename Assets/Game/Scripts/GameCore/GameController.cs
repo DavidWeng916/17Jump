@@ -75,7 +75,7 @@ namespace Live17Game
                     StartNextRound();
                     break;
                 case JumpResult.Fail:
-                    EndGame();
+                    _playerController.PlayFallDownAnimation(EndGame);
                     break;
             }
         }

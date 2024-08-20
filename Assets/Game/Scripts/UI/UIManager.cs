@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Live17Game
 {
     public class UIManager : MonoBehaviour
     {
+        [SerializeField]
+        private DisplayLevelUI _displayLevelUI = null;
+
         [SerializeField]
         private UIPanelManager _uiPanelManager = null;
 
@@ -13,6 +17,8 @@ namespace Live17Game
 
         public void Init()
         {
+            _displayLevelUI.Init();
+
             _uiPanelManager.Init();
             _uiPanelManager.EndGameUI.onPlayAgain = OnPlayAgain;
         }
@@ -39,6 +45,12 @@ namespace Live17Game
 
         public void GameEnd()
         {
+            StartCoroutine(DelayShowEndGameUI());
+        }
+
+        private IEnumerator DelayShowEndGameUI()
+        {
+            yield return new WaitForSeconds(1f);
             _uiPanelManager.EndGameUI.Show();
         }
 

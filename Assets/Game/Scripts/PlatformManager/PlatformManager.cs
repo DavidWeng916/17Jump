@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Live17Game
@@ -11,12 +7,24 @@ namespace Live17Game
         public PlatformUnit CurrentPlatformUnit { get; private set; } = null;
         public PlatformUnit TargetPlatformUnit { get; private set; } = null;
 
+        private DataModel DataModel => JumpApp.Instance.DataModel;
+
         public void Init()
         {
             base.Init(DEFAULT_CAPACITY, MAX_SIZE);
 
-            SpawnFirstPlatformUnit();
-            SpawnTargetPlatformUnit(false);
+            SpawnDefaultFirstPlatformUnit();
+            SpawnDefaultSecondPlatformUnit();
+        }
+
+        private void SpawnDefaultFirstPlatformUnit()
+        {
+            CurrentPlatformUnit = ObtainPlatformUnit(DataModel.GetDefaultFirstPlatformData());
+        }
+
+        private void SpawnDefaultSecondPlatformUnit()
+        {
+            SpawnTargetPlatformUnit(DataModel.GetDefaultSecondPlatformData(CurrentPlatformUnit), false);
         }
 
         public void SpawnNextPlatform()
@@ -26,33 +34,16 @@ namespace Live17Game
                 CurrentPlatformUnit = TargetPlatformUnit;
             }
 
-            SpawnTargetPlatformUnit(true);
+            SpawnTargetPlatformUnit(DataModel.GetNextPlatformData(CurrentPlatformUnit), true);
         }
 
-        private void SpawnFirstPlatformUnit()
+        private void SpawnTargetPlatformUnit(PlatformData platformData, bool isAnimate)
         {
-            PlatformUnit platformUnit = ObtainPlatformUnit(3);
-            platformUnit.SetLocalPositionAndRotation(Vector3.zero, Quaternion.AngleAxis(180f, Vector3.up));
-
-            CurrentPlatformUnit = platformUnit;
-        }
-
-        private void SpawnTargetPlatformUnit(bool isAnimate)
-        {
-            float distance = 6f;
-
-            SpawnDirection spawnDirection = (SpawnDirection)Random.Range(0, 2);
-            Vector3 direction = spawnDirection == SpawnDirection.Left ? Vector3.left : Vector3.forward;
-            float angle = spawnDirection == SpawnDirection.Left ? 90f : 180f;
-
-            PlatformUnit platformUnit = ObtainPlatformUnit();
-
-            Vector3 targetLocalPosition = CurrentPlatformUnit.LocalPosition + direction * distance;
-            targetLocalPosition.y = 0f;
-
-            platformUnit.SetLocalPositionAndRotation(targetLocalPosition, Quaternion.AngleAxis(angle, Vector3.up));
+            PlatformUnit platformUnit = ObtainPlatformUnit(platformData);
 
             TargetPlatformUnit = platformUnit;
+            TargetPlatformUnit.SetOppositePlatformUnit(CurrentPlatformUnit);
+            CurrentPlatformUnit.SetOppositePlatformUnit(TargetPlatformUnit);
 
             if (isAnimate)
             {
@@ -60,16 +51,14 @@ namespace Live17Game
             }
         }
 
-        private PlatformUnit ObtainPlatformUnit(uint size = 0)
+        private PlatformUnit ObtainPlatformUnit(PlatformData platformData)
         {
             // uint id = GetIdentity();
-            if (size == 0)
-            {
-                size = (uint)Random.Range(2, 4);
-            }
+
+            DataModel.IncreasePlatformCount();
 
             PlatformUnit platformUnit = Obtain();
-            platformUnit.SetData(size);
+            platformUnit.SetData(platformData);
 
             // AddToActiveItemUnitMap(itemUnit);
 

@@ -18,6 +18,7 @@ namespace Live17Game
         [SerializeField]
         private Transform _character = null;
 
+        private float _modelRadius = 0.5f;
         private bool _isCanJump = false;
         private float _pressTime = 0f;
         private float _accumulateEnergySpeed = 2f;
@@ -28,8 +29,6 @@ namespace Live17Game
         public Action onJumpStart = null;
         public Action<Vector3> onJumpComplete = null;
         public Action<float> onAccumulateEnergy = null;
-
-        // public float jumpLength = 2.5f;
 
         public void Init()
         {
@@ -60,8 +59,6 @@ namespace Live17Game
                 Jump();
                 SetControl(false);
             }
-
-            // if (Input.GetKeyDown(KeyCode.Space)) Jump();
         }
 
         private void ResetEnergy()
@@ -96,7 +93,7 @@ namespace Live17Game
             Vector3 targetLocalPosition = GetTargetLocalPosition(localPosition);
 
             // Test
-            // targetLocalPosition = targetPlatformUnit.PlatformLocalPoint;
+            targetLocalPosition = GetTargetPlatformUnit().PlatformLocalPoint;
 
             PlayJumpAnimation(localPosition, targetLocalPosition);
 
@@ -106,11 +103,11 @@ namespace Live17Game
         private Vector3 GetTargetLocalPosition(Vector3 localPosition)
         {
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
-            Vector3 nearestPoint = targetPlatformUnit.GetNearestPoint();
-            Vector3 farestPoint = targetPlatformUnit.GetFarthestPoint();
+            Vector3 nearestPoint = targetPlatformUnit.GetNearestPointFromCenter();
+            Vector3 farestPoint = targetPlatformUnit.GetFarthestPointFromCenter();
 
             float jumpLength = _pressTime * DataModel.JUMP_LENGTH;
-            float distanceXZ = MathUtility.GetXZDistance(localPosition, nearestPoint);
+            float distanceXZ = MathUtility.DistanceXZ(localPosition, nearestPoint);
 
             if (jumpLength < distanceXZ)
             {
@@ -138,10 +135,47 @@ namespace Live17Game
             onJumpComplete(transform.localPosition);
         }
 
+        private float GetFallDownAngle()
+        {
+            PlatformUnit currentPlatformUnit = GetCurrentPlatformUnit();
+            PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
+
+            List<PlatformPoint> platformPointList = new List<PlatformPoint>
+            {
+                new PlatformPoint(LocalPosition, currentPlatformUnit.GetNearestPointFromCenter(), 90f),
+                new PlatformPoint(LocalPosition, targetPlatformUnit.GetNearestPointFromCenter(), -90f),
+                new PlatformPoint(LocalPosition, targetPlatformUnit.GetFarthestPointFromCenter(), 90f)
+            };
+
+            platformPointList.Sort((a, b) => a.Distance - b.Distance > 0 ? 1 : -1);
+            PlatformPoint platformPoint = platformPointList[0];
+
+            float distance = MathUtility.DistanceXZ(platformPoint.PlayerPoint, platformPoint.ReferencePoint);
+            float angle = distance < _modelRadius ? platformPoint.FallDownAngle : 0f;
+
+            return angle;
+        }
+
+        public void PlayFallDownAnimation(Action callback)
+        {
+            float duration = 0.5f;
+            float angle = GetFallDownAngle();
+
+            Tweener moveTween = transform.DOLocalMoveY(angle == 0f ? 0f : _modelRadius, duration);
+            Tweener rotateTween = transform.DOLocalRotateQuaternion(transform.localRotation * Quaternion.AngleAxis(angle, Vector3.right), duration);
+
+            DOTween.Sequence()
+                .SetLink(gameObject)
+                .Append(moveTween)
+                .Join(rotateTween)
+                .OnComplete(() => callback())
+                ;
+        }
+
         public void RefreshOriginPositionAndForward()
         {
-            PlatformUnit platformUnit = GetCurrentPlatformUnit();
-            transform.localPosition = platformUnit.PlatformLocalPoint;
+            PlatformUnit currentPlatformUnit = GetCurrentPlatformUnit();
+            transform.localPosition = currentPlatformUnit.PlatformLocalPoint;
             RefreshForward();
         }
 

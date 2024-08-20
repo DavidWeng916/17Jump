@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Live17Game
@@ -10,19 +8,36 @@ namespace Live17Game
         {
             float distance;
 
-            distance = MathUtility.GetXZDistance(localPosition, currentPlatformUnit.PlatformLocalPoint);
+            distance = MathUtility.DistanceXZ(localPosition, currentPlatformUnit.PlatformLocalPoint);
             if (distance <= currentPlatformUnit.Radius)
             {
                 return JumpResult.None;
             }
 
-            distance = MathUtility.GetXZDistance(localPosition, targetPlatformUnit.PlatformLocalPoint);
+            distance = MathUtility.DistanceXZ(localPosition, targetPlatformUnit.PlatformLocalPoint);
             if (distance <= targetPlatformUnit.Radius)
             {
                 return JumpResult.Success;
             }
 
             return JumpResult.Fail;
+        }
+
+        public static uint GetPlatformSize(PlatformSizeRange platformSizeRange)
+        {
+            return (uint)Random.Range(platformSizeRange.UnitMin, platformSizeRange.UnitMax + 1);
+        }
+
+        public static float GetPlatformDistance(uint safeDistance, uint distanceUnit)
+        {
+            uint baseDistance = 1;
+            uint randomDistance = MathUtility.RandomRangeIncludeMax(0, distanceUnit);
+            uint increaseUnit = baseDistance + randomDistance;
+            uint finalDistance = safeDistance + increaseUnit;
+
+            // Debug.Log($"===== safeDistance:{safeDistance} randomDistance:{randomDistance} increaseUnit:{increaseUnit} dinalDistance:{finalDistance}");
+
+            return finalDistance;
         }
     }
 }
