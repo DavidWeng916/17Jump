@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Live17Game
@@ -8,6 +9,8 @@ namespace Live17Game
         public PlatformUnit TargetPlatformUnit { get; private set; } = null;
 
         private DataModel DataModel => JumpApp.Instance.DataModel;
+
+        private Queue<PlatformUnit> _platformUnitQueue = new Queue<PlatformUnit>();
 
         public void Init()
         {
@@ -20,6 +23,7 @@ namespace Live17Game
         private void SpawnDefaultFirstPlatformUnit()
         {
             CurrentPlatformUnit = ObtainPlatformUnit(DataModel.GetDefaultFirstPlatformData());
+            RecordPlatformUnit(CurrentPlatformUnit);
         }
 
         private void SpawnDefaultSecondPlatformUnit()
@@ -40,6 +44,7 @@ namespace Live17Game
         private void SpawnTargetPlatformUnit(PlatformData platformData, bool isAnimate)
         {
             PlatformUnit platformUnit = ObtainPlatformUnit(platformData);
+            RecordPlatformUnit(platformUnit);
 
             TargetPlatformUnit = platformUnit;
             TargetPlatformUnit.SetOppositePlatformUnit(CurrentPlatformUnit);
@@ -63,6 +68,21 @@ namespace Live17Game
             // AddToActiveItemUnitMap(itemUnit);
 
             return platformUnit;
+        }
+
+        private void RecordPlatformUnit(PlatformUnit platformUnit)
+        {
+            _platformUnitQueue.Enqueue(platformUnit);
+
+            if (_platformUnitQueue.Count > 10)
+            {
+                RecyclePlatformUnit(_platformUnitQueue.Dequeue());
+            }
+        }
+
+        private void RecyclePlatformUnit(PlatformUnit platformUnit)
+        {
+            Release(platformUnit);
         }
 
         public Vector3 GetCenterPointOfBothPlatforms()

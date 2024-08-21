@@ -64,7 +64,7 @@ namespace Live17Game
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
 
             JumpResult jumpResult = GameLogicUtility.GetJumpResult(localPosition, currentPlatformUnit, targetPlatformUnit);
-            Debug.Log($"jumpResult:{jumpResult}");
+            // Debug.Log($"jumpResult:{jumpResult}");
 
             switch (jumpResult)
             {

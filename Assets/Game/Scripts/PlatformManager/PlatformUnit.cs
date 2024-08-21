@@ -5,6 +5,9 @@ namespace Live17Game
 {
     public class PlatformUnit : ObjectPoolUnitBase
     {
+        private static readonly Vector3 DEFAULT_IDLE_POINT = new Vector3(-10f, 0, 0);
+        private static readonly Quaternion DEFAULT_IDLE_QUAT = Quaternion.identity;
+
         [SerializeField]
         private GameObject _modelGo = null;
 
@@ -29,6 +32,13 @@ namespace Live17Game
             transform.localScale = SizeVec;
 
             SetLocalPositionAndRotation(platformData.LocalPosition, Quaternion.AngleAxis(platformData.AngleY, Vector3.up));
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            SetLocalPositionAndRotation(DEFAULT_IDLE_POINT, DEFAULT_IDLE_QUAT);
         }
 
         public void SetOppositePlatformUnit(PlatformUnit oppositePlatformUnit)

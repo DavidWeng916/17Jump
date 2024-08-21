@@ -24,6 +24,8 @@ namespace Live17Game
         private float _accumulateEnergySpeed = 2f;
         private Vector3 LocalPosition => transform.localPosition;
 
+        private bool _isCheat = false;
+
         public Func<PlatformUnit> onRequestCurrentPlatformUnit = null;
         public Func<PlatformUnit> onRequestTargetPlatformUnit = null;
         public Action onJumpStart = null;
@@ -37,6 +39,8 @@ namespace Live17Game
 
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Alpha1)) ToggleCheat();
+
             if (!_isCanJump)
             {
                 return;
@@ -92,8 +96,10 @@ namespace Live17Game
             Vector3 localPosition = LocalPosition;
             Vector3 targetLocalPosition = GetTargetLocalPosition(localPosition);
 
-            // Test
-            targetLocalPosition = GetTargetPlatformUnit().PlatformLocalPoint;
+            if (_isCheat)
+            {
+                targetLocalPosition = GetTargetPlatformUnit().PlatformLocalPoint;
+            }
 
             PlayJumpAnimation(localPosition, targetLocalPosition);
 
@@ -241,6 +247,12 @@ namespace Live17Game
         private void SetCharacterLocalRotationX(float angleX)
         {
             _character.localRotation = Quaternion.AngleAxis(angleX, Vector3.right);
+        }
+
+        private void ToggleCheat()
+        {
+            _isCheat = !_isCheat;
+            Debug.Log($"_isCheat:{_isCheat}");
         }
     }
 }
