@@ -119,7 +119,7 @@ namespace Live17Game
             Gizmos.DrawRay(GetFarthestPointFromCenter(), Vector3.up * 3f);
 
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(LocalPosition + Vector3.up * 2f, 0.1f);
+            Gizmos.DrawSphere(LocalPosition + Vector3.up * 2f, DataModel.PERFECT_RADIUS);
         }
     }
 }

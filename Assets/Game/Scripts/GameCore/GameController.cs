@@ -133,10 +133,10 @@ namespace Live17Game
         private void RefreshScore()
         {
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
-            uint score = GameLogicUtility.CalculateScore(_playerController.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
+            bool isPerfect = DataModel.IsPerfect(_playerController.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
+            uint score = DataModel.GetScore(isPerfect);
 
             DataModel.AddScore(score);
-            _playerController.ShowScore(score);
             onScore(_playerController.WorldPosition + new Vector3(0, 1f, 0), score);
         }
 

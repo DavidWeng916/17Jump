@@ -102,9 +102,29 @@ namespace Live17Game
 
     public struct CoordConvertData
     {
-        public Camera Camera;
-        public Canvas Canvas;
-        public RectTransform Container;
-        public Vector3 WorldPoint;
+        public Camera Camera { get; private set; }
+        public Canvas Canvas { get; private set; }
+        public RectTransform Container { get; private set; }
+        public Vector3 WorldPoint { get; private set; }
+
+        public CoordConvertData(Camera camera, Canvas canvas, RectTransform container, Vector3 worldPoint)
+        {
+            Camera = camera;
+            Canvas = canvas;
+            Container = container;
+            WorldPoint = worldPoint;
+        }
     }
+
+    /* public struct ScoreData
+    {
+        public bool IsPerfect { get; private set; }
+        public uint Score { get; private set; }
+
+        public ScoreData(bool isPerfect, uint score)
+        {
+            IsPerfect = isPerfect;
+            Score = score;
+        }
+    } */
 }

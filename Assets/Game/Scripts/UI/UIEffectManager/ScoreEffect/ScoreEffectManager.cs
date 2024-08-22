@@ -20,15 +20,7 @@ namespace Live17Game
             ScoreEffectUnit scoreEffectUnit = Obtain();
             scoreEffectUnit.onAnimationComplete = OnRecycle;
 
-            CoordConvertData coordConvertData = new CoordConvertData
-            {
-                Camera = _camera,
-                Canvas = _canvas,
-                Container = Container,
-                WorldPoint = worldPoint,
-            };
-
-            // Vector2 point = CoordinateUtility.ConvertWorldPointToCanvas(_camera, _canvas, ts.position, Container);
+            CoordConvertData coordConvertData = new CoordConvertData(_camera, _canvas, Container, worldPoint);
             scoreEffectUnit.Show(coordConvertData, score);
         }
 

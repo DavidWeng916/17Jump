@@ -8,6 +8,9 @@ namespace Live17Game
 {
     public class PlayerController : MonoBehaviour
     {
+#if UNITY_EDITOR
+        private static bool IS_CHEAT_ENABLE = false;
+#endif
         private const float JUMP_HEIGHT = 4f;
         private const float PLAYER_SCALE_Y_MIN = 0.4f;
         private const float PLAYER_SCALE_Y_MAX = 1f;
@@ -26,7 +29,7 @@ namespace Live17Game
         public Vector3 WorldPosition => transform.position;
 
         private bool _isPassing = false;
-        private bool _isCheat = true;
+
 
         public Func<PlatformUnit> onRequestCurrentPlatformUnit = null;
         public Func<PlatformUnit> onRequestTargetPlatformUnit = null;
@@ -106,13 +109,13 @@ namespace Live17Game
             Vector3 localPosition = LocalPosition;
             Vector3 targetLocalPosition = GetTargetLocalPosition(localPosition);
 
-            if (_isCheat)
+#if UNITY_EDITOR
+            if (IS_CHEAT_ENABLE)
             {
                 targetLocalPosition = GetTargetPlatformUnit().PlatformLocalPoint;
             }
-
+#endif
             PlayJumpAnimation(localPosition, targetLocalPosition);
-
             onJumpStart();
         }
 
@@ -217,11 +220,6 @@ namespace Live17Game
             SetLocalRotation(Quaternion.AngleAxis(angleY, Vector3.up));
         }
 
-        public void ShowScore(uint score)
-        {
-
-        }
-
         private PlatformUnit GetCurrentPlatformUnit()
         {
             return onRequestCurrentPlatformUnit();
@@ -266,8 +264,16 @@ namespace Live17Game
 
         private void ToggleCheat()
         {
-            _isCheat = !_isCheat;
-            Debug.Log($"_isCheat:{_isCheat}");
+#if UNITY_EDITOR
+            IS_CHEAT_ENABLE = !IS_CHEAT_ENABLE;
+            Debug.Log($"_isCheat:{IS_CHEAT_ENABLE}");
+#endif
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(WorldPosition, Vector3.up);
         }
     }
 }

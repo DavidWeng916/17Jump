@@ -14,7 +14,13 @@ namespace Live17Game
         public const float CAMERA_MOVE_DURATION = 0.5f;
         public const float CAMERA_DISTANCE = 15f;
 
+        private const uint SCORE_NORMAL = 1u;
+        private const uint SCORE_PERFECT = 2u;
+        public const float PERFECT_RADIUS = 0.2f;
+
         private GameData _gameData = null;
+        private bool _isPerfect = false;
+        private uint _perfectCount = 0u;
 
         private uint _createdPlatformCount = 0;
         public uint CreatedPlatformCount
@@ -78,11 +84,41 @@ namespace Live17Game
 
             CurrentScore = 0;
             CreatedPlatformCount = 0;
+
+            _isPerfect = false;
+            _perfectCount = 0u;
         }
 
         private void LoadGameData()
         {
             _gameData = StorageManager.LoadGameData();
+        }
+
+        public bool IsPerfect(Vector3 playerPoint, Vector3 platformPoint)
+        {
+            Vector2 p1 = playerPoint.ToVectorXZ();
+            Vector2 p2 = platformPoint.ToVectorXZ();
+
+            return Vector2.Distance(p1, p2) <= PERFECT_RADIUS;
+        }
+
+        public uint GetScore(bool isPerfect)
+        {
+            if (_isPerfect && isPerfect)
+            {
+                _perfectCount++;
+            }
+            else
+            {
+                _perfectCount = 0u;
+
+            }
+            _isPerfect = isPerfect;
+
+            uint baseScore = _isPerfect ? SCORE_PERFECT : SCORE_NORMAL;
+            uint score = baseScore + _perfectCount * SCORE_PERFECT;
+
+            return score;
         }
 
         public void AddScore(uint score)
