@@ -22,8 +22,9 @@ namespace Live17Game
         private bool _isCanJump = false;
         private float _pressTime = 0f;
         private float _accumulateEnergySpeed = 2f;
-        private Vector3 LocalPosition => transform.localPosition;
+        public Vector3 LocalPosition => transform.localPosition;
 
+        private bool _isPassing = false;
         private bool _isCheat = false;
 
         public Func<PlatformUnit> onRequestCurrentPlatformUnit = null;
@@ -48,21 +49,29 @@ namespace Live17Game
 
             if (Input.GetMouseButtonDown(0))
             {
+                SetPassing(true);
                 ResetEnergy();
                 RefreshForward();
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && _isPassing)
             {
                 AccumulateEnergy();
             }
 
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0) && _isPassing)
             {
                 RestoreScaleHeight();
                 Jump();
+                ResetEnergy();
                 SetControl(false);
+                SetPassing(false);
             }
+        }
+
+        private void SetPassing(bool isPassing)
+        {
+            _isPassing = isPassing;
         }
 
         private void ResetEnergy()

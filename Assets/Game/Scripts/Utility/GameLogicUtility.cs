@@ -39,5 +39,22 @@ namespace Live17Game
 
             return finalDistance;
         }
+
+        public static uint CalculateScore(Vector3 playerPoint, Vector3 platformPoint)
+        {
+            Vector2 p1 = playerPoint.ToVectorXZ();
+            Vector2 p2 = platformPoint.ToVectorXZ();
+
+            Debug.Log($"playerPoint:{playerPoint} platformPoint:{platformPoint}");
+
+            float distance = Vector2.Distance(p1, p2);
+            uint score = distance < 0.1f ? 2u : 1u;
+
+
+            Debug.Log($"distance:{distance} score:{score}");
+
+
+            return score;
+        }
     }
 }

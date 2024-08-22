@@ -108,10 +108,18 @@ namespace Live17Game
 
         void OnDrawGizmos()
         {
+            if (_oppositePlatformUnit == null)
+            {
+                return;
+            }
+
             Gizmos.color = Color.blue;
             Gizmos.DrawRay(GetNearestPointFromCenter(), Vector3.up * 3f);
             Gizmos.color = Color.red;
             Gizmos.DrawRay(GetFarthestPointFromCenter(), Vector3.up * 3f);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(LocalPosition + Vector3.up * 2f, 0.1f);
         }
     }
 }

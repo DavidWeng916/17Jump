@@ -12,12 +12,17 @@ namespace Live17Game
         [SerializeField]
         private UIPanelManager _uiPanelManager = null;
 
+        [SerializeField]
+        private ScoreManager _scoreManager = null;
+
         public Action onResetGame = null;
         public Action onPlayAgain = null;
 
         public void Init()
         {
             _displayLevelUI.Init();
+
+            _scoreManager.Init();
 
             _uiPanelManager.Init();
             _uiPanelManager.EndGameUI.onPlayAgain = OnPlayAgain;

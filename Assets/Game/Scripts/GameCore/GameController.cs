@@ -14,6 +14,8 @@ namespace Live17Game
         [SerializeField]
         private PlayerController _playerController = null;
 
+        private DataModel DataModel => JumpApp.Instance.DataModel;
+
         public Action onStartGame = null;
         public Action onEndGame = null;
 
@@ -30,6 +32,13 @@ namespace Live17Game
             _playerController.onJumpStart = OnJumpStart;
             _playerController.onJumpComplete = OnJumpComplete;
             _playerController.RefreshOriginPositionAndForward();
+        }
+
+        public void ResetGame()
+        {
+            DataModel.Reset();
+
+            StartGame();
         }
 
         #region PlayerController
@@ -72,6 +81,7 @@ namespace Live17Game
                     _playerController.SetControl(true);
                     break;
                 case JumpResult.Success:
+                    RefreshScore();
                     StartNextRound();
                     break;
                 case JumpResult.Fail:
@@ -117,6 +127,14 @@ namespace Live17Game
         private void RefreshCamerPosition()
         {
             _cameraManager.SetFollowTarget(_platformManager.GetCenterPointOfBothPlatforms(), true);
+        }
+
+        private void RefreshScore()
+        {
+            PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
+            uint score = GameLogicUtility.CalculateScore(_playerController.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
+
+            DataModel.AddScore(score);
         }
 
         /* void Update()
