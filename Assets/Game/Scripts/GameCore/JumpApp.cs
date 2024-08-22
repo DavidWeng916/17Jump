@@ -35,6 +35,7 @@ namespace Live17Game
             _gameController.Init();
             _gameController.onStartGame = OnStartGame;
             _gameController.onEndGame = OnEndGame;
+            _gameController.onScore = OnScore;
             _gameController.StartGame();
         }
 
@@ -56,6 +57,11 @@ namespace Live17Game
         private void OnEndGame()
         {
             _uiManager.GameEnd();
+        }
+
+        private void OnScore(Vector3 worldPoint, uint score)
+        {
+            _uiManager.SpawnScore(worldPoint, score);
         }
 
         private void OnResetGame()

@@ -23,9 +23,10 @@ namespace Live17Game
         private float _pressTime = 0f;
         private float _accumulateEnergySpeed = 2f;
         public Vector3 LocalPosition => transform.localPosition;
+        public Vector3 WorldPosition => transform.position;
 
         private bool _isPassing = false;
-        private bool _isCheat = false;
+        private bool _isCheat = true;
 
         public Func<PlatformUnit> onRequestCurrentPlatformUnit = null;
         public Func<PlatformUnit> onRequestTargetPlatformUnit = null;
@@ -214,6 +215,11 @@ namespace Live17Game
             float angleY = -1f * angle;
 
             SetLocalRotation(Quaternion.AngleAxis(angleY, Vector3.up));
+        }
+
+        public void ShowScore(uint score)
+        {
+
         }
 
         private PlatformUnit GetCurrentPlatformUnit()

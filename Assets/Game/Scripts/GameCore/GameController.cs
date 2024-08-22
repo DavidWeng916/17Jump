@@ -18,6 +18,7 @@ namespace Live17Game
 
         public Action onStartGame = null;
         public Action onEndGame = null;
+        public Action<Vector3, uint> onScore = null;
 
         public void Init()
         {
@@ -135,11 +136,13 @@ namespace Live17Game
             uint score = GameLogicUtility.CalculateScore(_playerController.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
 
             DataModel.AddScore(score);
+            _playerController.ShowScore(score);
+            onScore(_playerController.WorldPosition + new Vector3(0, 1f, 0), score);
         }
 
         /* void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) RefreshCamerPosition();
+            if (Input.GetKeyDown(KeyCode.Alpha2)) onScore(_playerController.WorldPosition, 1);
         } */
     }
 }

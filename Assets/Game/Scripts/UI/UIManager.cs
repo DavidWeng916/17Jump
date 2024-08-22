@@ -15,6 +15,9 @@ namespace Live17Game
         [SerializeField]
         private ScoreManager _scoreManager = null;
 
+        [SerializeField]
+        private UIEffectManager _uiEffectManager = null;
+
         public Action onResetGame = null;
         public Action onPlayAgain = null;
 
@@ -23,9 +26,15 @@ namespace Live17Game
             _displayLevelUI.Init();
 
             _scoreManager.Init();
+            _uiEffectManager.Init();
 
             _uiPanelManager.Init();
             _uiPanelManager.EndGameUI.onPlayAgain = OnPlayAgain;
+        }
+
+        public void Reset()
+        {
+
         }
 
         private void OnShowSettingUI()
@@ -59,9 +68,9 @@ namespace Live17Game
             _uiPanelManager.EndGameUI.Show();
         }
 
-        public void Reset()
+        public void SpawnScore(Vector3 worldPoint, uint score)
         {
-
+            _uiEffectManager.SpawnScore(worldPoint, score);
         }
     }
 }

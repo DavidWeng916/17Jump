@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Live17Game
 {
-    public class PlatformManager : ObjectPoolManagerBase<PlatformUnit>
+    public class PlatformManager : ObjectPoolManagerBase<PlatformUnit, Transform>
     {
         public PlatformUnit CurrentPlatformUnit { get; private set; } = null;
         public PlatformUnit TargetPlatformUnit { get; private set; } = null;

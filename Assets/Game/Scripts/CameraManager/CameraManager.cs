@@ -5,30 +5,28 @@ namespace Live17Game
 {
     public class CameraManager : MonoBehaviour
     {
-        private const float DISTANCE = 15f;
-
         [SerializeField]
         private Transform _cameraTs = null;
 
-        // private float _followPointToCameraDistance = 0f;
+        private Tween _tween = null;
 
         public void Init(Vector3 followPoint)
         {
             _cameraTs = transform;
-            // _followPointToCameraDistance = Vector3.Distance(followPoint, _cameraTs.localPosition);
-            // _followPointToCameraDistance = 15f;
 
             SetFollowTarget(followPoint, false);
         }
 
         public void SetFollowTarget(Vector3 followPoint, bool isAnimate)
         {
+            KillTween();
+
             Vector3 direction = -_cameraTs.forward;
-            Vector3 finallPoint = followPoint + direction * DISTANCE;
+            Vector3 finallPoint = followPoint + direction * DataModel.CAMERA_DISTANCE;
 
             if (isAnimate)
             {
-                _cameraTs.DOLocalMove(finallPoint, 0.5f).SetLink(gameObject);
+                _tween = _cameraTs.DOLocalMove(finallPoint, DataModel.CAMERA_MOVE_DURATION).SetLink(gameObject);
             }
             else
             {
@@ -36,14 +34,25 @@ namespace Live17Game
             }
         }
 
+        private void KillTween()
+        {
+            if (_tween != null)
+            {
+                _tween.Kill(true);
+                _tween = null;
+            }
+        }
+
+        private Ray ray = new Ray();
         void OnDrawGizmos()
         {
-            Ray ray = new Ray(_cameraTs.localPosition, _cameraTs.forward);
+            ray.origin = _cameraTs.localPosition;
+            ray.direction = _cameraTs.forward;
 
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(ray.origin, ray.direction * DISTANCE);
+            Gizmos.DrawRay(ray.origin, ray.direction * DataModel.CAMERA_DISTANCE);
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(ray.GetPoint(DISTANCE), 0.1f);
+            Gizmos.DrawSphere(ray.GetPoint(DataModel.CAMERA_DISTANCE), 0.1f);
         }
     }
 }

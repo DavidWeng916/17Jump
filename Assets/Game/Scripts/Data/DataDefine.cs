@@ -99,4 +99,12 @@ namespace Live17Game
         Start,
         End,
     }
+
+    public struct CoordConvertData
+    {
+        public Camera Camera;
+        public Canvas Canvas;
+        public RectTransform Container;
+        public Vector3 WorldPoint;
+    }
 }

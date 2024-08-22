@@ -11,6 +11,9 @@ namespace Live17Game
         public const float JUMP_LENGTH = 3.0f;
         public const uint DEFAULT_PLATFORM_HEIGHT = 2;
 
+        public const float CAMERA_MOVE_DURATION = 0.5f;
+        public const float CAMERA_DISTANCE = 15f;
+
         private GameData _gameData = null;
 
         private uint _createdPlatformCount = 0;
