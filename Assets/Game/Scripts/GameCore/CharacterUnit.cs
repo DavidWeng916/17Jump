@@ -137,16 +137,20 @@ namespace Live17Game
             Vector3 nearestPoint = targetPlatformUnit.GetNearestPointFromCenter();
             Vector3 farestPoint = targetPlatformUnit.GetFarthestPointFromCenter();
 
-            float jumpLength = accumulateProgress * DataModel.JUMP_LENGTH;
-            // Debug.Log($"===== accumulateProgress:{accumulateProgress} jumpLength:{jumpLength}");
-            float distanceXZ = MathUtility.DistanceXZ(localPosition, nearestPoint);
+            return Interpolate(localPosition, nearestPoint, farestPoint, accumulateProgress);
+        }
 
-            if (jumpLength < distanceXZ)
+        public Vector3 Interpolate(Vector3 currentPoint, Vector3 nearestPoint, Vector3 farestPoint, float accumulateProgress)
+        {
+            float jumpLength = accumulateProgress * DataModel.JUMP_LENGTH;
+            float distanceP0ToP1 = MathUtility.DistanceXZ(currentPoint, nearestPoint);
+
+            if (jumpLength < distanceP0ToP1)
             {
-                return MathUtility.GetLandPoint(localPosition, nearestPoint, jumpLength);
+                return MathUtility.GetLandPoint(currentPoint, nearestPoint, jumpLength);
             }
 
-            return MathUtility.GetLandPoint(nearestPoint, farestPoint, jumpLength - distanceXZ);
+            return MathUtility.GetLandPoint(nearestPoint, farestPoint, jumpLength - distanceP0ToP1);
         }
 
         private void PlayJumpAnimation(Vector3 startPoint, Vector3 endPoint)
@@ -257,6 +261,11 @@ namespace Live17Game
 
         void OnDrawGizmos()
         {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
             Gizmos.color = Color.green;
             Gizmos.DrawRay(WorldPosition, Vector3.up);
         }
