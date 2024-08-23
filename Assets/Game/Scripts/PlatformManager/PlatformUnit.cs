@@ -9,7 +9,13 @@ namespace Live17Game
         private static readonly Quaternion DEFAULT_IDLE_QUAT = Quaternion.identity;
 
         [SerializeField]
-        private GameObject _modelGo = null;
+        private Transform _platformScaleYTs = null;
+
+        [SerializeField]
+        private Transform _platformScaleXZTs = null;
+
+        [SerializeField]
+        private GameObject _centerTipGo = null;
 
         private PlatformUnit _oppositePlatformUnit = null;
 
@@ -18,9 +24,43 @@ namespace Live17Game
         public float Radius { get; private set; } = 0f;
         public float HalfHeight { get; private set; } = 0f;
 
-        public Vector3 LocalPosition => transform.localPosition;
+        public Vector3 LocalPosition
+        {
+            get
+            {
+                Vector3 localPosition = transform.localPosition;
+                localPosition.y = 0;
+                return localPosition;
+            }
+        }
         public Quaternion LocalRotation => transform.localRotation;
         public Vector3 PlatformLocalPoint => LocalPosition + HeightVec;
+
+        public override void Init()
+        {
+            base.Init();
+
+            InitCenterTip();
+        }
+
+        private void InitCenterTip()
+        {
+            Vector3 localScale = _centerTipGo.transform.localScale;
+            localScale.x = DataModel.PERFECT_DIAMETER;
+            localScale.z = DataModel.PERFECT_DIAMETER;
+
+            _centerTipGo.transform.localScale = localScale;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            SetLocalPositionAndRotation(DEFAULT_IDLE_POINT, DEFAULT_IDLE_QUAT);
+            SetDisplayCenterTip(false);
+
+            _oppositePlatformUnit = null;
+        }
 
         public void SetData(PlatformData platformData)
         {
@@ -29,21 +69,56 @@ namespace Live17Game
             Radius = SizeVec.x * 0.5f;
             HalfHeight = SizeVec.y * 0.5f;
 
-            transform.localScale = SizeVec;
+            _platformScaleYTs.localScale = new Vector3(1, SizeVec.y, 1);
+            _platformScaleXZTs.localScale = new Vector3(SizeVec.x, 1, SizeVec.z);
 
             SetLocalPositionAndRotation(platformData.LocalPosition, Quaternion.AngleAxis(platformData.AngleY, Vector3.up));
         }
 
-        public override void Reset()
+        public void SetDisplayCenterTip(bool isDisplay)
         {
-            base.Reset();
-
-            SetLocalPositionAndRotation(DEFAULT_IDLE_POINT, DEFAULT_IDLE_QUAT);
+            _centerTipGo.SetActive(isDisplay);
         }
 
         public void SetOppositePlatformUnit(PlatformUnit oppositePlatformUnit)
         {
             _oppositePlatformUnit = oppositePlatformUnit;
+        }
+
+        public void SetLocalPositionAndRotation(Vector3 localPosition, Quaternion localRotation)
+        {
+            transform.SetLocalPositionAndRotation(localPosition, localRotation);
+        }
+
+        public float UpdateScaleHeight(float accumulateProgress)
+        {
+            Vector3 localScale = _platformScaleYTs.localScale;
+            float lastHeight = localScale.y;
+            localScale.y = Mathf.Lerp(SizeVec.y, HalfHeight, accumulateProgress);
+            _platformScaleYTs.localScale = localScale;
+
+            return lastHeight - localScale.y;
+        }
+
+        public void RestoreScaleHeight()
+        {
+            _platformScaleYTs
+                .DOScaleY(SizeVec.y, 0.3f)
+                .SetLink(gameObject)
+                .SetEase(Ease.OutBounce);
+        }
+
+        public void PlaySpawnAnimation()
+        {
+            Vector3 originPoint = LocalPosition;
+            Vector3 fromPoint = new Vector3(originPoint.x, 5f, originPoint.z);
+
+            transform
+                .DOLocalMoveY(0, 0.5f)
+                .From(fromPoint, true, true)
+                .SetLink(gameObject)
+                .SetEase(Ease.OutBounce)
+                ;
         }
 
         public Vector3 GetNearestPointFromCenter()
@@ -65,61 +140,20 @@ namespace Live17Game
             return PlatformLocalPoint + sign * closestAxis * Radius;
         }
 
-        public void SetLocalPositionAndRotation(Vector3 localPosition, Quaternion localRotation)
-        {
-            transform.SetLocalPositionAndRotation(localPosition, localRotation);
-        }
-
-        public float UpdateScaleHeight(float accumulateProgress)
-        {
-            Vector3 localScale = transform.localScale;
-            float lastHeight = localScale.y;
-            localScale.y = Mathf.Lerp(SizeVec.y, HalfHeight, accumulateProgress);
-            transform.localScale = localScale;
-
-            return lastHeight - localScale.y;
-        }
-
-        public void RestoreScaleHeight()
-        {
-            transform
-            .DOScaleY(SizeVec.y, 0.3f)
-            .SetLink(gameObject)
-            .SetEase(Ease.OutBounce);
-        }
-
-        public void PlaySpawnAnimation()
-        {
-            Vector3 originPoint = _modelGo.transform.localPosition;
-            Vector3 fromPoint = new Vector3(originPoint.x, 5f, originPoint.z);
-
-            _modelGo.transform
-                .DOLocalMoveY(0, 0.5f)
-                .From(fromPoint, true, true)
-                .SetLink(gameObject)
-                .SetEase(Ease.OutBounce)
-                ;
-        }
-
-        public void ResetData()
-        {
-            _oppositePlatformUnit = null;
-        }
-
         void OnDrawGizmos()
         {
-            if (_oppositePlatformUnit == null)
+            if (!Application.isPlaying || _oppositePlatformUnit == null)
             {
                 return;
             }
 
-            Gizmos.color = Color.blue;
-            Gizmos.DrawRay(GetNearestPointFromCenter(), Vector3.up * 3f);
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(GetFarthestPointFromCenter(), Vector3.up * 3f);
+            // Gizmos.color = Color.blue;
+            // Gizmos.DrawRay(GetNearestPointFromCenter(), Vector3.up * 3f);
+            // Gizmos.color = Color.red;
+            // Gizmos.DrawRay(GetFarthestPointFromCenter(), Vector3.up * 3f);
 
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(LocalPosition + Vector3.up * 2f, DataModel.PERFECT_RADIUS);
+            Gizmos.color = new Color(1, 0, 0, 0.5f);
+            Gizmos.DrawSphere(PlatformLocalPoint, DataModel.PERFECT_RADIUS);
         }
     }
 }

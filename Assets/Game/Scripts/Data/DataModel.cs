@@ -17,9 +17,10 @@ namespace Live17Game
         private const uint SCORE_NORMAL = 1u;
         private const uint SCORE_PERFECT = 2u;
         public const float PERFECT_RADIUS = 0.2f;
+        public const float PERFECT_DIAMETER = PERFECT_RADIUS * 2;
 
         private GameData _gameData = null;
-        private bool _isPerfect = false;
+        public bool IsPerfect { get; private set; } = false;
         private uint _perfectCount = 0u;
 
         private uint _createdPlatformCount = 0;
@@ -62,6 +63,8 @@ namespace Live17Game
             }
         }
 
+        public bool IsDisplayCenterTip => _perfectCount > 0;
+
         public GameState GameState { get; private set; } = GameState.None;
         public bool IsGameStart => GameState == GameState.Start;
         public bool IsGameEnd => GameState == GameState.End;
@@ -85,7 +88,7 @@ namespace Live17Game
             CurrentScore = 0;
             CreatedPlatformCount = 0;
 
-            _isPerfect = false;
+            IsPerfect = false;
             _perfectCount = 0u;
         }
 
@@ -94,7 +97,7 @@ namespace Live17Game
             _gameData = StorageManager.LoadGameData();
         }
 
-        public bool IsPerfect(Vector3 playerPoint, Vector3 platformPoint)
+        public bool CheckIsPerfect(Vector3 playerPoint, Vector3 platformPoint)
         {
             Vector2 p1 = playerPoint.ToVectorXZ();
             Vector2 p2 = platformPoint.ToVectorXZ();
@@ -104,7 +107,7 @@ namespace Live17Game
 
         public uint GetScore(bool isPerfect)
         {
-            if (_isPerfect && isPerfect)
+            if (IsPerfect && isPerfect)
             {
                 _perfectCount++;
             }
@@ -113,9 +116,9 @@ namespace Live17Game
                 _perfectCount = 0u;
 
             }
-            _isPerfect = isPerfect;
+            IsPerfect = isPerfect;
 
-            uint baseScore = _isPerfect ? SCORE_PERFECT : SCORE_NORMAL;
+            uint baseScore = IsPerfect ? SCORE_PERFECT : SCORE_NORMAL;
             uint score = baseScore + _perfectCount * SCORE_PERFECT;
 
             return score;

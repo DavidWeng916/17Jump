@@ -83,6 +83,9 @@ namespace Live17Game
 
         private void OnAccumulateEnergyComplete(float accumulateProgress)
         {
+            PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
+            targetPlatformUnit.SetDisplayCenterTip(false);
+
             _characterUnit.Jump(accumulateProgress);
         }
 
@@ -157,9 +160,9 @@ namespace Live17Game
         private void RefreshScore()
         {
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
-            bool isPerfect = DataModel.IsPerfect(_characterUnit.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
+            bool isPerfect = DataModel.CheckIsPerfect(_characterUnit.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
             uint score = DataModel.GetScore(isPerfect);
-
+            Debug.Log($"isPerfect:{isPerfect} score:{score}");
             DataModel.AddScore(score);
             onScore(_characterUnit.WorldPosition + new Vector3(0, 1f, 0), score);
         }

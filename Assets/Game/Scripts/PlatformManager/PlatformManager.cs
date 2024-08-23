@@ -48,6 +48,8 @@ namespace Live17Game
 
             TargetPlatformUnit = platformUnit;
             TargetPlatformUnit.SetOppositePlatformUnit(CurrentPlatformUnit);
+            TargetPlatformUnit.SetDisplayCenterTip(DataModel.IsPerfect);
+
             CurrentPlatformUnit.SetOppositePlatformUnit(TargetPlatformUnit);
 
             if (isAnimate)
