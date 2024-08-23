@@ -48,18 +48,6 @@ namespace Live17Game
         }
     }
 
-    /* public struct PlatformDistanceRange
-    {
-        public uint DistanceMin;
-        public uint DistanceMax;
-
-        public PlatformDistanceRange(uint distanceMin, uint distanceMax)
-        {
-            DistanceMin = distanceMin;
-            DistanceMax = distanceMax;
-        }
-    } */
-
     public struct PlatformData
     {
         public uint Size;

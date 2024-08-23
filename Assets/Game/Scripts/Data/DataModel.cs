@@ -179,17 +179,14 @@ namespace Live17Game
 
         public PlatformData GetNextPlatformData(PlatformUnit currentPlatformUnit)
         {
-            // uint size = (uint)UnityEngine.Random.Range(1, 4);
-            // float radius = size * 0.5f;
-            // float distance = GameLogicUtility.GetMinDistance(currentPlatformUnit.Radius + radius, PLATFORM_RANGE);
-
-            // Debug.Log($"CreatedPlatformCount:{CreatedPlatformCount} CurrentLevel:{CurrentLevel}");
-
             LevelData levelData = LevelModel.GetLevelData(CurrentLevel);
             uint size = GameLogicUtility.GetPlatformRandomSize(levelData.SizeRange);
             float radius = size * 0.5f;
             uint distanceMin = (uint)Mathf.CeilToInt(currentPlatformUnit.Radius + radius);
             float distance = GameLogicUtility.GetPlatformRandomDistance(distanceMin, levelData.DistanceUnit);
+
+            // test
+            // distance = GameLogicUtility.GetPlatformRandomDistance(distanceMin, 6);
 
             SpawnDirection spawnDirection = UnityEngine.Random.Range(0, 2) == 0 ? SpawnDirection.Left : SpawnDirection.Right;
             Vector3 direction = spawnDirection == SpawnDirection.Left ? Vector3.left : Vector3.forward;

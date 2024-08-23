@@ -39,5 +39,18 @@ namespace Live17Game
 
             return finalDistance;
         }
+
+        public static Vector3 Interpolate(Vector3 currentPoint, Vector3 nearestPoint, Vector3 farestPoint, float accumulateProgress)
+        {
+            float jumpLength = accumulateProgress * DataModel.JUMP_LENGTH;
+            float distanceP0ToP1 = MathUtility.DistanceXZ(currentPoint, nearestPoint);
+
+            if (jumpLength < distanceP0ToP1)
+            {
+                return MathUtility.GetLandPoint(currentPoint, nearestPoint, jumpLength);
+            }
+
+            return MathUtility.GetLandPoint(nearestPoint, farestPoint, jumpLength - distanceP0ToP1);
+        }
     }
 }
