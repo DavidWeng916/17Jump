@@ -14,6 +14,9 @@ namespace Live17Game
         [SerializeField]
         private PlayerController _playerController = null;
 
+        [SerializeField]
+        private CharacterUnit _characterUnit = null;
+
         private DataModel DataModel => JumpApp.Instance.DataModel;
 
         public Action onStartGame = null;
@@ -26,13 +29,19 @@ namespace Live17Game
 
             _cameraManager.Init(_platformManager.GetCenterPointOfBothPlatforms());
 
+            _characterUnit.Init();
+            _characterUnit.onRequestCurrentPlatformUnit = OnRequestCurrentPlatformUnit;
+            _characterUnit.onRequestTargetPlatformUnit = OnRequestNextPlatformUnit;
+            _characterUnit.onSpawnAnimationComplete = OnSpawnAnimationComplete;
+
+            _characterUnit.onJumpStart = OnJumpStart;
+            _characterUnit.onJumpComplete = OnJumpComplete;
+            _characterUnit.RefreshOriginPositionAndForward();
+
             _playerController.Init();
-            _playerController.onRequestCurrentPlatformUnit = OnRequestCurrentPlatformUnit;
-            _playerController.onRequestTargetPlatformUnit = OnRequestNextPlatformUnit;
+            _playerController.onAccumulateEnergyReady = OnAccumulateEnergyReady;
             _playerController.onAccumulateEnergy = OnAccumulateEnergy;
-            _playerController.onJumpStart = OnJumpStart;
-            _playerController.onJumpComplete = OnJumpComplete;
-            _playerController.RefreshOriginPositionAndForward();
+            _playerController.onAccumulateEnergyComplete = OnAccumulateEnergyComplete;
         }
 
         public void ResetGame()
@@ -54,12 +63,27 @@ namespace Live17Game
             return GetTargetPlatformUnit();
         }
 
+        private void OnSpawnAnimationComplete()
+        {
+            _playerController.SetControl(true);
+        }
+
+        private void OnAccumulateEnergyReady(float accumulateProgress)
+        {
+            _characterUnit.RefreshForward();
+        }
+
         private void OnAccumulateEnergy(float accumulateProgress)
         {
             PlatformUnit currentPlatformUnit = GetCurrentPlatformUnit();
             float offsetY = currentPlatformUnit.UpdateScaleHeight(accumulateProgress);
 
-            _playerController.UpdateScaleHeight(accumulateProgress, offsetY);
+            _characterUnit.UpdateScaleHeight(accumulateProgress, offsetY);
+        }
+
+        private void OnAccumulateEnergyComplete(float accumulateProgress)
+        {
+            _characterUnit.Jump(accumulateProgress);
         }
 
         private void OnJumpStart()
@@ -86,7 +110,7 @@ namespace Live17Game
                     StartNextRound();
                     break;
                 case JumpResult.Fail:
-                    _playerController.PlayFallDownAnimation(EndGame);
+                    _characterUnit.PlayFallDownAnimation(EndGame);
                     break;
             }
         }
@@ -95,7 +119,7 @@ namespace Live17Game
 
         public void StartGame()
         {
-            _playerController.SetControl(true);
+            _characterUnit.PlaySpawnAnimation();
 
             onStartGame();
         }
@@ -104,7 +128,7 @@ namespace Live17Game
         {
             _platformManager.SpawnNextPlatform();
 
-            _playerController.RefreshForward();
+            _characterUnit.RefreshForward();
             _playerController.SetControl(true);
 
             RefreshCamerPosition();
@@ -133,11 +157,11 @@ namespace Live17Game
         private void RefreshScore()
         {
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
-            bool isPerfect = DataModel.IsPerfect(_playerController.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
+            bool isPerfect = DataModel.IsPerfect(_characterUnit.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
             uint score = DataModel.GetScore(isPerfect);
 
             DataModel.AddScore(score);
-            onScore(_playerController.WorldPosition + new Vector3(0, 1f, 0), score);
+            onScore(_characterUnit.WorldPosition + new Vector3(0, 1f, 0), score);
         }
 
         /* void Update()

@@ -2219,6 +2219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1433773976}
   - component: {fileID: 1433773977}
+  - component: {fileID: 1433773978}
   m_Layer: 0
   m_Name: GameWorld
   m_TagString: Untagged
@@ -2260,7 +2261,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cameraManager: {fileID: 330585548}
   _platformManager: {fileID: 1569769501}
-  _playerController: {fileID: 373689386}
+  _playerController: {fileID: 1433773978}
+  _characterUnit: {fileID: 373689386}
+--- !u!114 &1433773978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433773975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8bd7c769c94a414bb1ccde196bb14a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1467551677
 GameObject:
   m_ObjectHideFlags: 0
@@ -3456,7 +3470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2086985745
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3704,7 +3718,7 @@ PrefabInstance:
     - target: {fileID: 4879444195428884934, guid: 74f174b9e3a404b4081b9fd31e5c2439,
         type: 3}
       propertyPath: m_Name
-      value: Player
+      value: CharacterUnit
       objectReference: {fileID: 0}
     - target: {fileID: 4879444195428884935, guid: 74f174b9e3a404b4081b9fd31e5c2439,
         type: 3}

@@ -7,8 +7,8 @@ namespace Live17Game
 {
     public class DataModel
     {
-        public const float PRESS_TME_MAX = 5f;
-        public const float JUMP_LENGTH = 3.0f;
+        public const float PRESS_TME_MAX = 3f;
+        public const float JUMP_LENGTH = 20.0f;
         public const uint DEFAULT_PLATFORM_HEIGHT = 2;
 
         public const float CAMERA_MOVE_DURATION = 0.5f;
@@ -183,10 +183,10 @@ namespace Live17Game
             // Debug.Log($"CreatedPlatformCount:{CreatedPlatformCount} CurrentLevel:{CurrentLevel}");
 
             LevelData levelData = LevelModel.GetLevelData(CurrentLevel);
-            uint size = GameLogicUtility.GetPlatformSize(levelData.SizeRange);
+            uint size = GameLogicUtility.GetPlatformRandomSize(levelData.SizeRange);
             float radius = size * 0.5f;
             uint distanceMin = (uint)Mathf.CeilToInt(currentPlatformUnit.Radius + radius);
-            float distance = GameLogicUtility.GetPlatformDistance(distanceMin, levelData.DistanceUnit);
+            float distance = GameLogicUtility.GetPlatformRandomDistance(distanceMin, levelData.DistanceUnit);
 
             SpawnDirection spawnDirection = UnityEngine.Random.Range(0, 2) == 0 ? SpawnDirection.Left : SpawnDirection.Right;
             Vector3 direction = spawnDirection == SpawnDirection.Left ? Vector3.left : Vector3.forward;

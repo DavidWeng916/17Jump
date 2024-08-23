@@ -23,12 +23,12 @@ namespace Live17Game
             return JumpResult.Fail;
         }
 
-        public static uint GetPlatformSize(PlatformSizeRange platformSizeRange)
+        public static uint GetPlatformRandomSize(PlatformSizeRange platformSizeRange)
         {
             return (uint)Random.Range(platformSizeRange.UnitMin, platformSizeRange.UnitMax + 1);
         }
 
-        public static float GetPlatformDistance(uint safeDistance, uint distanceUnit)
+        public static float GetPlatformRandomDistance(uint safeDistance, uint distanceUnit)
         {
             uint baseDistance = 1;
             uint randomDistance = MathUtility.RandomRangeIncludeMax(0, distanceUnit);
