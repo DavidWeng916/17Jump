@@ -3,7 +3,47 @@ guid: 2c4d252837d01498789656030fba22d8
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface1
+    second: {fileID: 2100000, guid: b1a29513b851f465f856ba323ba15316, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface2
+    second: {fileID: 2100000, guid: 54c55d3b19acf4aa2a9a844080a9d53e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: body6
+    second: {fileID: 2100000, guid: 3b543cf867e754e99bf2c46cbcbe6739, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: eyes_MTL
+    second: {fileID: 2100000, guid: 976623edae41e4baaadb21d564ffc8a0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: shader_noes
+    second: {fileID: 2100000, guid: 9637ded6de40f485794a0595ba2d595a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: shader_noes1
+    second: {fileID: 2100000, guid: f631fd452c237486bbd5b8f3d3184b0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tears_MTL
+    second: {fileID: 2100000, guid: 3355f35b6bdc740eb9757554ab62bd64, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tongue_MTL
+    second: {fileID: 2100000, guid: 54fa4b5e3daf045bfb2f8549d8e48641, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -89,7 +129,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.03
+    globalScale: 3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

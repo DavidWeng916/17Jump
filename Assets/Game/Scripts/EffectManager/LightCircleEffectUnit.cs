@@ -38,7 +38,7 @@ namespace Live17Game
             _ts.SetPositionAndRotation(position, rotation);
 
             Tween scaleTween = _ts.DOScale(new Vector3(_endSizeXZ, 1f, _endSizeXZ), _duration).SetEase(Ease.OutQuad);
-            Tween alphaTween = _mat.DOFade(0f, _duration).SetEase(Ease.OutQuad);
+            Tween alphaTween = _mat.DOFade(0f, _duration).SetEase(Ease.InQuad);
 
             _sequence = DOTween.Sequence()
                 .SetLink(gameObject)
