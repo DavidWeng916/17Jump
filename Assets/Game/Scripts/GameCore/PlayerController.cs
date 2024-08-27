@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Live17Game
@@ -10,7 +8,6 @@ namespace Live17Game
 #if UNITY_EDITOR
         public static bool IS_CHEAT_ENABLE { get; private set; } = false;
 #endif
-
         private bool _isCanJump = false;
         private bool _isPassing = false;
         private float _pressTime = 0f;
@@ -28,8 +25,6 @@ namespace Live17Game
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) ToggleCheat();
-
             if (!_isCanJump)
             {
                 return;
@@ -92,7 +87,7 @@ namespace Live17Game
             onAccumulateEnergyComplete(AccumulateProgress);
         }
 
-        private void ToggleCheat()
+        public void ToggleCheat()
         {
 #if UNITY_EDITOR
             IS_CHEAT_ENABLE = !IS_CHEAT_ENABLE;

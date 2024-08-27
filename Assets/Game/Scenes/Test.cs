@@ -5,29 +5,29 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public Transform cubeA;
-    public Transform cubeB;
-    public Transform cubeC;
+    [SerializeField]
+    private ParticleSystem _particleSystem = null;
 
     void Awake()
     {
-        Debug.Log($"cubeA localScale:{cubeA.localScale} lossyScale:{cubeA.lossyScale}");
-        Debug.Log($"cubeB localScale:{cubeB.localScale} lossyScale:{cubeB.lossyScale}");
-        Debug.Log($"cubeC localScale:{cubeC.localScale} lossyScale:{cubeC.lossyScale}");
 
-        Vector3 localScale = cubeC.localScale;
-        Vector3 lossyScale = cubeC.lossyScale;
-        localScale.x /= lossyScale.x;
-        localScale.y /= lossyScale.y;
-        localScale.z /= lossyScale.z;
-
-
-        cubeC.localScale = localScale;
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) Play();
+        if (Input.GetKeyDown(KeyCode.Alpha2)) Stop();
+    }
 
+    private void Play()
+    {
+        _particleSystem.Play();
+    }
+
+    private void Stop()
+    {
+        _particleSystem.Stop();
+        _particleSystem.Clear();
     }
 
     /* void OnDrawGizmos()

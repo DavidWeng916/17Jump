@@ -8,6 +8,9 @@ namespace Live17Game
 {
     public class CharacterController : MonoBehaviour
     {
+        private static readonly Vector3 LIGHT_EFFECT_OFFSET = new Vector3(0, 0.1f, 0);
+
+        private const float SPAWN_HEIGHT = 6f;
         private const float JUMP_HEIGHT = 4f;
 
         private const float SCALE_Y_MIN = 0.4f;
@@ -34,12 +37,21 @@ namespace Live17Game
         [SerializeField]
         private TrailRenderer _trailRenderer = null;
 
+        [SerializeField]
+        private ParticleSystem _accumulateEnergyParticleSystem = null;
+
+        [SerializeField]
+        private ParticleSystem _onGroundParticleSystem = null;
+
+        private Transform _selfTs = null;
         private float _modelRadius = 0.5f;
 
         private CharacterUnit _characterUnit = null;
 
-        public Vector3 LocalPosition => transform.localPosition;
-        public Vector3 WorldPosition => transform.position;
+        public Vector3 LocalPosition => _selfTs.localPosition;
+        public Vector3 Position => _selfTs.position;
+        public Quaternion Rotation => _selfTs.rotation;
+        public Vector3 LightCircleEffectPosition => Position + LIGHT_EFFECT_OFFSET;
 
         public Func<PlatformUnit> onRequestCurrentPlatformUnit = null;
         public Func<PlatformUnit> onRequestTargetPlatformUnit = null;
@@ -49,6 +61,9 @@ namespace Live17Game
 
         public void Init()
         {
+            _selfTs = transform;
+
+            SetTrailDisplay(false);
             LoadCharacterUnit(1);
         }
 
@@ -88,6 +103,11 @@ namespace Live17Game
             SetTrailRendererParent(_trailRendererContainer);
         }
 
+        private void SetTrailDisplay(bool isEnabled)
+        {
+            _trailRenderer.emitting = isEnabled;
+        }
+
         private void SetTrailRendererParent(Transform parentTs)
         {
             _trailRenderer.transform.SetParent(parentTs);
@@ -97,7 +117,7 @@ namespace Live17Game
         public void RefreshOriginPositionAndForward()
         {
             PlatformUnit currentPlatformUnit = GetCurrentPlatformUnit();
-            transform.localPosition = currentPlatformUnit.PlatformLocalPoint + Vector3.up * 6f;
+            SetLocalPoaitionY(currentPlatformUnit.PlatformLocalPoint.y + SPAWN_HEIGHT);
 
             RefreshForward();
         }
@@ -108,7 +128,7 @@ namespace Live17Game
 
             PlatformUnit currentPlatformUnit = GetCurrentPlatformUnit();
 
-            Tween fallTween = transform
+            Tween fallTween = _selfTs
                 .DOMoveY(currentPlatformUnit.PlatformLocalPoint.y, duration)
                 .SetEase(Ease.OutBounce);
 
@@ -128,10 +148,11 @@ namespace Live17Game
 
         private void OnSpawnAnimationComplete()
         {
+            SetTrailDisplay(true);
             onSpawnAnimationComplete();
         }
 
-        public void RefreshForward()
+        private void RefreshForward()
         {
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
 
@@ -153,8 +174,15 @@ namespace Live17Game
             SetLocalRotation(Quaternion.AngleAxis(angleY, Vector3.up));
         }
 
+        public void PrepareJump()
+        {
+            RefreshForward();
+            PlayAccumulateEnergyEffect();
+        }
+
         public void Jump(float accumulateProgress)
         {
+            StopAccumulateEnergyEffect();
             RestoreScale();
 
             Vector3 localPosition = LocalPosition;
@@ -169,6 +197,22 @@ namespace Live17Game
 #endif
             PlayJumpAnimation(localPosition, targetLocalPosition);
             onJumpStart();
+        }
+
+        private void PlayAccumulateEnergyEffect()
+        {
+            _accumulateEnergyParticleSystem.Play();
+        }
+
+        private void StopAccumulateEnergyEffect()
+        {
+            _accumulateEnergyParticleSystem.Stop();
+            _accumulateEnergyParticleSystem.Clear();
+        }
+
+        public void PlayOnGroundEffect()
+        {
+            _onGroundParticleSystem.Play();
         }
 
         private Vector3 GetTargetLocalPosition(Vector3 localPosition, float accumulateProgress)
@@ -201,7 +245,7 @@ namespace Live17Game
 
         private void OnJumpComplete()
         {
-            onJumpComplete(transform.localPosition);
+            onJumpComplete(_selfTs.localPosition);
         }
 
         private float GetFallDownAngle()
@@ -230,8 +274,8 @@ namespace Live17Game
             float duration = 0.25f;
             float angle = GetFallDownAngle();
 
-            Tweener moveTween = transform.DOLocalMoveY(angle == 0f ? 0f : _modelRadius, duration);
-            Tweener rotateTween = transform.DOLocalRotateQuaternion(transform.localRotation * Quaternion.AngleAxis(angle, Vector3.right), duration);
+            Tweener moveTween = _selfTs.DOLocalMoveY(angle == 0f ? 0f : _modelRadius, duration);
+            Tweener rotateTween = _selfTs.DOLocalRotateQuaternion(_selfTs.localRotation * Quaternion.AngleAxis(angle, Vector3.right), duration);
 
             DOTween.Sequence()
                 .SetLink(gameObject)
@@ -250,12 +294,12 @@ namespace Live17Game
 
         private void SetLocalPoaition(Vector3 localPosition)
         {
-            transform.localPosition = localPosition;
+            _selfTs.localPosition = localPosition;
         }
 
         private void SetLocalRotation(Quaternion localRotation)
         {
-            transform.localRotation = localRotation;
+            _selfTs.localRotation = localRotation;
         }
 
         public void UpdateScaleHeight(float accumulateProgress, float offsetY)
@@ -301,13 +345,13 @@ namespace Live17Game
 
         void OnDrawGizmos()
         {
-            if (!Application.isPlaying)
+            if (!Application.isPlaying || _selfTs == null)
             {
                 return;
             }
 
             Gizmos.color = Color.green;
-            Gizmos.DrawRay(WorldPosition, Vector3.up);
+            Gizmos.DrawRay(Position, Vector3.up);
         }
     }
 }

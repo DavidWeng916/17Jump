@@ -29,11 +29,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5470006260297398894}
-  - {fileID: 2103815735619166771}
+  - {fileID: 2720515548036233076}
   m_Father: {fileID: 3444174623092734939}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2959593508802988420
+--- !u!1 &1987976867482416927
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2103815735619166771}
+  - component: {fileID: 2720515548036233076}
   m_Layer: 0
   m_Name: TrailContainer
   m_TagString: Untagged
@@ -49,13 +49,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2103815735619166771
+--- !u!4 &2720515548036233076
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2959593508802988420}
+  m_GameObject: {fileID: 1987976867482416927}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -109,8 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 730623f32605a4e3f8e6490bbcb87c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotateXTs: {fileID: 3694553467263614897}
-  TrailContainer: {fileID: 2103815735619166771}
+  _rotateXTs: {fileID: 3694553467263614897}
+  _trailContainer: {fileID: 2720515548036233076}
 --- !u!1001 &5504494730618936709
 PrefabInstance:
   m_ObjectHideFlags: 0

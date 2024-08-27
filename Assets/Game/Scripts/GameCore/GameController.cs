@@ -17,6 +17,9 @@ namespace Live17Game
         [SerializeField]
         private CharacterController _characterController = null;
 
+        [SerializeField]
+        private EffectManager _effectManager = null;
+
         private DataModel DataModel => JumpApp.Instance.DataModel;
 
         public Action onStartGame = null;
@@ -25,6 +28,8 @@ namespace Live17Game
 
         public void Init()
         {
+            _effectManager.Init();
+
             _platformManager.Init();
 
             _cameraManager.Init(_platformManager.GetCenterPointOfBothPlatforms());
@@ -70,7 +75,7 @@ namespace Live17Game
 
         private void OnAccumulateEnergyReady(float accumulateProgress)
         {
-            _characterController.RefreshForward();
+            _characterController.PrepareJump();
         }
 
         private void OnAccumulateEnergy(float accumulateProgress)
@@ -109,7 +114,8 @@ namespace Live17Game
                     _playerController.SetControl(true);
                     break;
                 case JumpResult.Success:
-                    RefreshScore();
+                    _characterController.PlayOnGroundEffect();
+                    CheckScore();
                     StartNextRound();
                     break;
                 case JumpResult.Fail:
@@ -130,9 +136,8 @@ namespace Live17Game
         private void StartNextRound()
         {
             _platformManager.SpawnNextPlatform();
-
-            _characterController.RefreshForward();
             _playerController.SetControl(true);
+            // _characterController.RefreshForward();
 
             RefreshCamerPosition();
         }
@@ -157,19 +162,27 @@ namespace Live17Game
             _cameraManager.SetFollowTarget(_platformManager.GetCenterPointOfBothPlatforms(), true);
         }
 
-        private void RefreshScore()
+        private void CheckScore()
         {
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
+
             bool isPerfect = DataModel.CheckIsPerfect(_characterController.LocalPosition, targetPlatformUnit.PlatformLocalPoint);
             uint score = DataModel.GetScore(isPerfect);
             Debug.Log($"isPerfect:{isPerfect} score:{score}");
+
             DataModel.AddScore(score);
-            onScore(_characterController.WorldPosition + new Vector3(0, 1f, 0), score);
+            onScore(_characterController.Position + new Vector3(0, 1f, 0), score);
+
+            if (isPerfect)
+            {
+                EffectManager.Instance.Play(EffectID.LightCircle, _characterController.LightCircleEffectPosition, _characterController.Rotation);
+            }
         }
 
-        /* void Update()
+        void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha2)) onScore(_playerController.WorldPosition, 1);
-        } */
+            if (Input.GetKeyDown(KeyCode.Alpha1)) _playerController.ToggleCheat();
+            // if (Input.GetKeyDown(KeyCode.Alpha2)) EffectManager.Instance.Play(EffectID.LightCircle, _characterController.Position, _characterController.Rotation);
+        }
     }
 }
