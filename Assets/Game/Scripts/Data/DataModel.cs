@@ -16,7 +16,7 @@ namespace Live17Game
 
         private const uint SCORE_NORMAL = 1u;
         private const uint SCORE_PERFECT = 2u;
-        public const float PERFECT_RADIUS = 0.2f;
+        public const float PERFECT_RADIUS = 0.25f;
         public const float PERFECT_DIAMETER = PERFECT_RADIUS * 2;
 
         private GameData _gameData = null;
