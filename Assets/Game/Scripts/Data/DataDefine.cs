@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 namespace Live17Game
@@ -103,16 +104,4 @@ namespace Live17Game
             WorldPoint = worldPoint;
         }
     }
-
-    /* public struct ScoreData
-    {
-        public bool IsPerfect { get; private set; }
-        public uint Score { get; private set; }
-
-        public ScoreData(bool isPerfect, uint score)
-        {
-            IsPerfect = isPerfect;
-            Score = score;
-        }
-    } */
 }

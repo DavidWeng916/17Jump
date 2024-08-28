@@ -23,7 +23,7 @@ namespace Live17Game
         public Transform Container => _container;
 
         [SerializeField]
-        private LightCircleEffectUnit _lightCircleEffectUnitPrefab = null;
+        private SerializableDictionary<EffectID, EffectUnit> _effectPrefabMap = new SerializableDictionary<EffectID, EffectUnit>();
 
         private Dictionary<EffectID, ObjectPool<EffectUnit>> _objectPoolMap = new Dictionary<EffectID, ObjectPool<EffectUnit>>();
 
@@ -34,9 +34,12 @@ namespace Live17Game
 
         private EffectUnit CreatePooledItem(EffectID effectID)
         {
-            // TODO: 
+            if (!_effectPrefabMap.Dict.TryGetValue(effectID, out EffectUnit effectUnit))
+            {
+                throw new System.Exception($"Error, could't found effectID:{effectID}");
+            }
 
-            EffectUnit unit = Instantiate<EffectUnit>(_lightCircleEffectUnitPrefab, _container);
+            EffectUnit unit = Instantiate<EffectUnit>(effectUnit, _container);
             unit.Init();
             return unit;
         }
@@ -90,11 +93,11 @@ namespace Live17Game
             Instance = null;
         }
 
-        public void Play(EffectID effectID, Vector3 worldPoint, Quaternion rotation)
+        public void Play(EffectID effectID, Vector3 position, Quaternion rotation)
         {
             EffectUnit effectUnit = Obtain(effectID);
             effectUnit.onComplete = OnRecycle;
-            effectUnit.Play(worldPoint, rotation);
+            effectUnit.Play(position, rotation);
         }
 
         private void OnRecycle(EffectUnit effectUnit)

@@ -98,6 +98,8 @@ namespace Live17Game
         {
             PlatformUnit currentPlatformUnit = GetCurrentPlatformUnit();
             currentPlatformUnit.RestoreScaleHeight();
+
+            PlaySFX(SFXEnum.Jump);
         }
 
         private void OnJumpComplete(Vector3 localPosition)
@@ -106,22 +108,42 @@ namespace Live17Game
             PlatformUnit targetPlatformUnit = GetTargetPlatformUnit();
 
             JumpResult jumpResult = GameLogicUtility.GetJumpResult(localPosition, currentPlatformUnit, targetPlatformUnit);
-            // Debug.Log($"jumpResult:{jumpResult}");
-
             switch (jumpResult)
             {
                 case JumpResult.None:
-                    _playerController.SetControl(true);
+                    HandleNoneState();
                     break;
                 case JumpResult.Success:
-                    _characterController.PlayOnGroundEffect();
-                    CheckScore();
-                    StartNextRound();
+                    HandleSuccessState();
                     break;
                 case JumpResult.Fail:
-                    _characterController.PlayFallDownAnimation(EndGame);
+                    HandleFailState();
                     break;
             }
+        }
+
+        private void HandleNoneState()
+        {
+            PlaySFX(SFXEnum.FallGround);
+            _playerController.SetControl(true);
+        }
+
+        private void HandleSuccessState()
+        {
+            PlaySFX(SFXEnum.FallGround);
+            _characterController.PlayOnGroundEffect();
+
+            CheckScore();
+            StartNextRound();
+        }
+
+        private void HandleFailState()
+        {
+            _characterController.PlayFallDownAnimation(() =>
+            {
+                PlaySFX(SFXEnum.FallGround);
+                EndGame();
+            });
         }
 
         #endregion
@@ -175,8 +197,19 @@ namespace Live17Game
 
             if (isPerfect)
             {
-                EffectManager.Instance.Play(EffectID.LightCircle, _characterController.LightCircleEffectPosition, _characterController.Rotation);
+                PlaySFX(SFXEnum.PerfectScore);
+                PlayVFX(EffectID.LightCircle, _characterController.LightCircleEffectPosition, _characterController.Rotation);
             }
+        }
+
+        private void PlaySFX(SFXEnum sfxID)
+        {
+            AudioManager.Instance.PlaySFX(sfxID);
+        }
+
+        private void PlayVFX(EffectID vfxID, Vector3 position, Quaternion rotation)
+        {
+            EffectManager.Instance.Play(vfxID, position, rotation);
         }
 
         void Update()

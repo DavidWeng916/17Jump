@@ -11,6 +11,9 @@ namespace Live17Game
         public static bool IsExist { get; private set; } = Instance != null;
 
         [SerializeField]
+        private AudioManager _audioManager = null;
+
+        [SerializeField]
         private UIManager _uiManager = null;
         public UIManager UIManager => _uiManager;
 
@@ -27,6 +30,8 @@ namespace Live17Game
 
             _dataModel = new DataModel();
             _dataModel.Init();
+
+            _audioManager.Init();
 
             _uiManager.Init();
             _uiManager.onResetGame = OnResetGame;
