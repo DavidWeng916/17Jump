@@ -8,6 +8,9 @@ public class Test : MonoBehaviour
     [SerializeField]
     private ParticleSystem _particleSystem = null;
 
+    [SerializeField]
+    private AudioSource _audioSource = null;
+
     void Awake()
     {
 
@@ -17,17 +20,18 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) Play();
         if (Input.GetKeyDown(KeyCode.Alpha2)) Stop();
+
+        // _audioSource.pitch
     }
 
     private void Play()
     {
-        _particleSystem.Play();
+        _audioSource.Play();
     }
 
     private void Stop()
     {
-        _particleSystem.Stop();
-        _particleSystem.Clear();
+
     }
 
     /* void OnDrawGizmos()

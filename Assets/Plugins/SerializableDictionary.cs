@@ -18,8 +18,6 @@ namespace Live17Game
         [SerializeField]
         private List<DictionaryData> _list = new List<DictionaryData>();
 
-        public Dictionary<TKey, TValue> Dict = null;
-
         public void OnBeforeSerialize()
         {
 
@@ -27,24 +25,20 @@ namespace Live17Game
 
         public void OnAfterDeserialize()
         {
-            Dict = ToDictionary();
+            ToDictionary();
         }
 
-        private Dictionary<TKey, TValue> ToDictionary()
+        private void ToDictionary()
         {
-            Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
-
             for (int i = 0; i < _list.Count; i++)
             {
                 DictionaryData data = _list[i];
 
-                if (!dict.TryAdd(data.Key, data.Value))
+                if (!TryAdd(data.Key, data.Value))
                 {
                     Debug.LogError($"Duplicate Key:{data.Key}");
                 }
             }
-
-            return dict;
         }
     }
 }

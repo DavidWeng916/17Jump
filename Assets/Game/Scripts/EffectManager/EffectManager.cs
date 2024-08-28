@@ -34,9 +34,9 @@ namespace Live17Game
 
         private EffectUnit CreatePooledItem(EffectID effectID)
         {
-            if (!_effectPrefabMap.Dict.TryGetValue(effectID, out EffectUnit effectUnit))
+            if (!_effectPrefabMap.TryGetValue(effectID, out EffectUnit effectUnit))
             {
-                throw new System.Exception($"Error, could't found effectID:{effectID}");
+                throw new System.Exception($"Error, could't find effectID:{effectID}");
             }
 
             EffectUnit unit = Instantiate<EffectUnit>(effectUnit, _container);

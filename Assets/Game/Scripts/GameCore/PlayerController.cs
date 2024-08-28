@@ -14,6 +14,8 @@ namespace Live17Game
 
         private float AccumulateProgress => _pressTime / DataModel.PRESS_TME_MAX;
 
+        private IntervalSetting _accumulateEnergySFXSetting = new IntervalSetting(0.1f, 0.2f, 0.025f, () => AudioManager.Instance.PlaySFX(SFXEnum.AccumulateEnergy));
+
         public Action<float> onAccumulateEnergyReady = null;
         public Action<float> onAccumulateEnergy = null;
         public Action<float> onAccumulateEnergyComplete = null;
@@ -74,16 +76,19 @@ namespace Live17Game
 
         private void PropagateAccumulateEnergyReady()
         {
+            _accumulateEnergySFXSetting.Play();
             onAccumulateEnergyReady(AccumulateProgress);
         }
 
         private void PropagateAccumulateEnergy()
         {
+            _accumulateEnergySFXSetting.Update();
             onAccumulateEnergy(AccumulateProgress);
         }
 
         private void PropagateAccumulateEnergyComplete()
         {
+            _accumulateEnergySFXSetting.Stop();
             onAccumulateEnergyComplete(AccumulateProgress);
         }
 

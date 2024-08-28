@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,10 +16,10 @@ namespace Live17Game
         private AudioSource _audioSourceSFX = null;
 
         [SerializeField]
-        private AudioClip[] _BGMClips = null;
+        private SerializableDictionary<BGMEnum, AudioClip> _BGMMap = new SerializableDictionary<BGMEnum, AudioClip>();
 
         [SerializeField]
-        private AudioClip[] _sfxClips = null;
+        private SerializableDictionary<SFXEnum, AudioClip> _SFXMap = new SerializableDictionary<SFXEnum, AudioClip>();
 
         private DataModel DataModel => JumpApp.Instance?.DataModel;
 
@@ -58,7 +59,11 @@ namespace Live17Game
 
         public void PlayBGM(BGMEnum bgmEnum, bool isLoop)
         {
-            AudioClip audioClip = _BGMClips[(uint)bgmEnum];
+            if (!_BGMMap.TryGetValue(bgmEnum, out AudioClip audioClip))
+            {
+                throw new Exception($"Error, couldn't find bgmEnum:{bgmEnum}");
+            }
+
             _audioSourceBGM.clip = audioClip;
             _audioSourceBGM.loop = isLoop;
             _audioSourceBGM.Play();
@@ -73,7 +78,11 @@ namespace Live17Game
 
         public void PlaySFX(SFXEnum sfxEnum)
         {
-            AudioClip audioClip = _sfxClips[(uint)sfxEnum];
+            if (!_SFXMap.TryGetValue(sfxEnum, out AudioClip audioClip))
+            {
+                throw new Exception($"Error, couldn't find sfxEnum:{sfxEnum}");
+            }
+
             _audioSourceSFX.PlayOneShot(audioClip);
         }
     }

@@ -13,7 +13,5 @@ namespace Live17Game
         Jump = 1,
         FallGround = 2,
         PerfectScore = 3,
-
     }
 }
-

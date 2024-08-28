@@ -1094,10 +1094,22 @@ MonoBehaviour:
   _audioSourceSFX: {fileID: 1261163194}
   _BGMClips: []
   _sfxClips:
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 46aabb5e896e94d04a0a31d16981331f, type: 3}
   - {fileID: 8300000, guid: c925ff31dc54948ba897eb9832c39024, type: 3}
   - {fileID: 8300000, guid: 3c32e59933df34390a931eda9dfb77e4, type: 3}
   - {fileID: 8300000, guid: 4b47a30f0508f47fcac51474679e5154, type: 3}
+  _BGMMap:
+    _list: []
+  _SFXMap:
+    _list:
+    - Key: 0
+      Value: {fileID: 8300000, guid: 46aabb5e896e94d04a0a31d16981331f, type: 3}
+    - Key: 1
+      Value: {fileID: 8300000, guid: c925ff31dc54948ba897eb9832c39024, type: 3}
+    - Key: 2
+      Value: {fileID: 8300000, guid: 3c32e59933df34390a931eda9dfb77e4, type: 3}
+    - Key: 3
+      Value: {fileID: 8300000, guid: 4b47a30f0508f47fcac51474679e5154, type: 3}
 --- !u!1 &766816706
 GameObject:
   m_ObjectHideFlags: 0
