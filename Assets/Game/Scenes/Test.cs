@@ -6,9 +6,6 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     [SerializeField]
-    private ParticleSystem _particleSystem = null;
-
-    [SerializeField]
     private AudioSource _audioSource = null;
 
     void Awake()
@@ -20,8 +17,6 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) Play();
         if (Input.GetKeyDown(KeyCode.Alpha2)) Stop();
-
-        // _audioSource.pitch
     }
 
     private void Play()

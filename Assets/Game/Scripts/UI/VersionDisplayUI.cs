@@ -5,7 +5,7 @@ namespace Live17Game
 {
     public class VersionDisplayUI : MonoBehaviour
     {
-        private const string VERSION = "0.2.0";
+        private const string VERSION = "0.3.0";
 
         [SerializeField]
         private TextMeshProUGUI _versionText = null;

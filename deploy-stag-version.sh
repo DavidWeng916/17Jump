@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BUCKET_URL="gs://17live-game-sta"
-BUCKET_NAME="POC/Jump/v2"
+BUCKET_NAME="POC/Jump/v3-demo"
 
 functions_array=(
 # "removeFolderContent 0" # uncomment this if you want to remove the all the Build folder content
