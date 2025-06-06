@@ -30,6 +30,8 @@ namespace Live17Game
 
         private void ToDictionary()
         {
+            Clear();
+
             for (int i = 0; i < _list.Count; i++)
             {
                 DictionaryData data = _list[i];
